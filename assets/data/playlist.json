@@ -1,0 +1,34 @@
+[
+	{
+		"id": 0,
+		"title": "downtown",
+		"artist": "Benjamin Tissot",
+		"music": "/downtown.mp3",
+		"image": "/downtown.jpg",
+		"desc": "Music by Bensound.com/royalty-free-music License code: QGZBJRER5EIUEXUT"
+	},
+	{
+		"id": 1,
+		"title": "Perfect Beauty",
+		"artist": "Daddy's Music",
+		"music": "/perfect-beauty.mp3",
+		"image": "/perfect-beauty.jpg",
+		"desc": "Music by <a href='https://pixabay.com/users/daddy_s_music-22836301/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=191271'>Zakhar Valaha</a> from <a href='https://pixabay.com/music/?utm_source=link attribution&utm_medium=referral&utm_campaign=music&utm_content=191271'>Pixabay</a>"
+	},
+	{
+		"id": 2,
+		"title": "Upbeat Indie Folk 60s",
+		"artist": "LesFm",
+		"music": "/upbeat-indie.mp3",
+		"image": "/upbeat-indie.jpg",
+		"desc": "Music by <a href='https://pixabay.com/users/lesfm-22579021/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=13449'>Oleksii Kaplunskyi</a> from <a href='https://pixabay.com/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=13449'>Pixabay</a>"
+	},
+	{
+		"id": 3,
+		"title": "waterfall",
+		"artist": "RomanSenykMusic",
+		"music": "/waterfall.mp3",
+		"image": "/waterfall.jpg",
+		"desc": "Music by <a href='https://pixabay.com/users/romansenykmusic-11989248/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=140894'>Roman Senyk</a> from <a href='https://pixabay.com/music/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=140894'>Pixabay</a>"
+	}
+]

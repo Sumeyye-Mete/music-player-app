@@ -1,0 +1,139 @@
+:root {
+	--font1: calc(1rem + 0.3vw);
+	--font2: calc(1.1rem + 0.4vw);
+	--font3: calc(1.2rem + 0.5vw);
+	--font4: calc(1.3rem + 0.6vw);
+	--font5: calc(1.4rem + 0.7vw);
+
+	--bg: #81689d;
+	--bgCard: rgba(255, 255, 255, 0.5);
+	--bgLicence: #c0b3ce;
+	--textColor: black;
+
+	--transition: all 0.4s;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+body {
+	color: var(--textColor);
+}
+h1,
+h3 {
+	margin: 0;
+}
+.green-text {
+	color: green;
+}
+
+a {
+	text-decoration: none;
+	color: var(--textColor);
+}
+a:hover {
+	text-decoration: underline;
+}
+
+.card-container {
+	height: 100vh;
+	width: 100vw;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: var(--bg);
+}
+
+.card {
+	border: 2px solid black;
+	border-radius: calc(1rem + 10px);
+	width: 100%;
+	max-width: 400px;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 1rem;
+	background-color: var(--bgCard);
+}
+
+img#song-poster {
+	aspect-ratio: 5/3;
+	border-radius: 1rem;
+	object-fit: cover;
+	object-position: 50% 100%;
+}
+
+div.info-section {
+	position: relative;
+	display: flex;
+	justify-content: space-between;
+}
+
+div.info-section #song-info > * {
+	text-transform: capitalize;
+	margin-bottom: 0.5rem;
+}
+
+div.info-section .licence {
+	position: absolute;
+	max-width: 60%;
+	background-color: var(--bgLicence);
+	box-shadow: 0 0 5px black;
+	bottom: 3rem;
+	right: 1rem;
+	border-radius: 0.5rem;
+	padding: 0.5rem;
+	overflow: scroll;
+	text-wrap: nowrap;
+}
+div.info-section .licence::-webkit-scrollbar {
+	width: 0;
+	height: 0;
+}
+
+.d-none {
+	display: none;
+}
+
+button {
+	background-color: transparent;
+	border: none;
+	cursor: pointer;
+	font-size: var(--font3);
+	transition: var(--transition);
+}
+button:hover {
+	transform: scale(1.1);
+}
+
+.list-btn {
+	align-self: flex-end;
+	margin: 10px;
+	font-size: var(--font3);
+}
+
+input#time-range {
+	width: 100%;
+	padding: 1rem 0;
+}
+
+.time-info {
+	display: flex;
+	justify-content: space-between;
+}
+
+audio#current-audio {
+	display: none;
+}
+
+/* Navigation Buttons styles  */
+
+.button-container {
+	display: flex;
+	justify-content: space-between;
+}
+.button-container #play-btn {
+	font-size: 3rem;
+}
