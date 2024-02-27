@@ -213,7 +213,6 @@ li.list-item:hover {
 li.list-item img {
 	width: 30%;
 	border-radius: 1rem 0 0 1rem;
-	-webkit-aspect-ratio: 5/3;
 	aspect-ratio: 5/3;
 	object-fit: cover;
 	object-position: 50% 100%;
@@ -229,5 +228,14 @@ li.list-item div > * {
 		--bgCard: #2c2f45;
 		--bgLicense: #484d67;
 		--textColor: white;
+	}
+}
+
+@supports not (aspect-ratio: 5/3) {
+	img#song-poster {
+		height: 300px;
+	}
+	li.list-item img {
+		height: 100px;
 	}
 }
