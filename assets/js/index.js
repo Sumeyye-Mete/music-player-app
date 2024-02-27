@@ -1,9 +1,11 @@
+/* Playlist DATA */
 const playlist = await fetch("/assets/data/playlist.json")
 	.then((response) => response.json())
 	.then((data) => {
 		return data;
 	});
 
+/* ------------VARIABLES--------------- */
 let isRepeat = false;
 let isShuffle = false;
 let currentFile = null;
@@ -11,14 +13,17 @@ let nextId = null;
 let prevId = null;
 let isPaused = true;
 
-//parent
+/* ------------DOM--------------- */
+
+//parents
 const cardContainer = document.getElementById("card-container");
+const playlistContainer = document.getElementById("playlist-container");
 
 //file elements
 const audio = document.getElementById("current-audio");
 const poster = document.getElementById("song-poster");
 const songInfo = document.getElementById("song-info");
-const licenceText = document.getElementsByClassName("licence")[0];
+const licenseText = document.getElementsByClassName("license")[0];
 
 //time elements
 const timeInput = document.getElementById("time-range");
@@ -26,16 +31,127 @@ const currentTimeInfo = document.getElementById("current-time-info");
 const totalTimeInfo = document.getElementById("total-time-info");
 
 //buttons
-const licenceButton = document.getElementById("licence-btn");
+const licenseButton = document.getElementById("license-btn");
 const playButton = document.getElementById("play-btn");
 const shuffleButton = document.getElementById("shuffle-btn");
 const backwardButton = document.getElementById("backward-btn");
 const forwardButton = document.getElementById("forward-btn");
 const repeatButton = document.getElementById("repeat-btn");
+const openListButton = document.getElementById("list-btn");
+const closeListButton = document.getElementById("close-btn");
 
-document.querySelectorAll("a").forEach((item) => {
-	item.setAttribute("target", "_blank");
+/* ------------FUNCTIONS--------------- */
+
+const convertSecondsToMinutes = (num) => {
+	const minutes = Math.floor(num / 60);
+	const seconds = Math.floor(num % 60);
+	if (seconds < 10) {
+		return `${minutes}:0${seconds}`;
+	}
+	return `${minutes}:${seconds}`;
+};
+
+//changes visible card and src of audio MAIN FUNCTION
+const changeTrack = (id) => {
+	currentFile = playlist[id];
+	//audio
+	audio.setAttribute("src", `./assets/musics/${currentFile.music}`);
+	//image
+	poster.setAttribute("src", `./assets/images/${currentFile.image}`);
+	//texts
+	songInfo.innerHTML = `<h2>${currentFile.title}</h2><h4>${currentFile.artist}</h4>`;
+	//info section
+	licenseText.innerHTML = currentFile.desc;
+	licenseText.querySelectorAll("a").forEach((item) => {
+		item.setAttribute("target", "_blank");
+	});
+	//change color of selected list item
+	const listItem = document
+		.getElementById("playlist")
+		.querySelector(`li[data-id="${id}"]`);
+	document.querySelectorAll(`li`).forEach((item) => {
+		item.classList.remove("selected");
+	});
+	listItem.classList.add("selected");
+
+	// isPaused => reflects previous song's play/pause state
+	// if prev song was playing play, else stop.
+	if (isPaused) {
+		audio.pause();
+	} else {
+		audio.play();
+	}
+};
+
+//calculates next id, it depends on shuffle button on or off
+const calculateNextId = () => {
+	if (isShuffle) {
+		while (true) {
+			nextId = Math.floor(Math.random() * playlist.length);
+			if (nextId !== currentFile.id) {
+				break;
+			}
+		}
+	} else {
+		if (currentFile.id === playlist.length - 1) {
+			nextId = 0;
+		} else {
+			nextId = currentFile.id + 1;
+		}
+	}
+};
+
+//calculates prev id, it depends on shuffle button on or off
+const calculatePrevId = () => {
+	if (isShuffle) {
+		while (true) {
+			prevId = Math.floor(Math.random() * playlist.length);
+			if (prevId !== currentFile.id) {
+				break;
+			}
+		}
+	} else {
+		if (currentFile.id === 0) {
+			prevId = playlist.length - 1;
+		} else {
+			prevId = currentFile.id - 1;
+		}
+	}
+};
+
+//fills playlist ul with playlist data items
+const renderPlaylist = (item) => {
+	//get ul
+	const ulEl = document.getElementById("playlist");
+	//create li item
+	const newLi = document.createElement("li");
+	newLi.className = "list-item";
+	newLi.setAttribute("data-id", item.id);
+	newLi.innerHTML = `<img src="./assets/images/${item.image}" alt="${item.title}" /> <div> <h3>${item.title}</h3><h5>${item.artist}</h5> </div>`;
+	//li item event
+	newLi.addEventListener("click", () => changeTrackFromList(item));
+
+	//add to ul
+	ulEl.appendChild(newLi);
+};
+
+const changeTrackFromList = (item) => {
+	isPaused = audio.paused;
+	changeTrack(item.id);
+	closeListButton.click();
+};
+
+/* ------------INITIAL SETTINGS--------------- */
+
+//fills playlist ul with playlist data items
+playlist.forEach((item) => {
+	renderPlaylist(item);
 });
+
+//First item is on
+changeTrack(0);
+
+/* ------------EVENTS--------------- */
 
 playButton.addEventListener("click", () => {
 	if (audio.paused) {
@@ -47,13 +163,15 @@ playButton.addEventListener("click", () => {
 	}
 });
 
-forwardButton.addEventListener("click",  () => {
+forwardButton.addEventListener("click", () => {
 	calculateNextId();
+	isPaused = audio.paused;
 	changeTrack(nextId);
 });
 
 backwardButton.addEventListener("click", () => {
 	calculatePrevId();
+	isPaused = audio.paused;
 	changeTrack(prevId);
 });
 
@@ -77,135 +195,46 @@ repeatButton.addEventListener("click", () => {
 	}
 });
 
-licenceButton.addEventListener("click", () => {
-	licenceText.classList.toggle("d-none");
+licenseButton.addEventListener("click", () => {
+	licenseText.classList.toggle("d-none");
 });
 
-timeInput.addEventListener("change", () => {
-	const dur = audio.duration;
-	audio.currentTime = (dur * timeInput.value) / 1000;
+openListButton.addEventListener("click", () => {
+	playlistContainer.classList.add("open");
+	playlistContainer.classList.remove("close");
 });
 
+closeListButton.addEventListener("click", () => {
+	playlistContainer.classList.remove("open");
+	playlistContainer.classList.add("close");
+});
+
+//takes input from user and changes audio current time
+timeInput.addEventListener("input", () => {
+	audio.currentTime = (audio.duration * timeInput.value) / 1000;
+});
+
+//changes minutes and input-range value according to audio current time update.
 audio.addEventListener("timeupdate", () => {
-	if (isNaN(audio.duration)) {
-		timeInput.value = 0;
-	} else {
-		timeInput.value = (audio.currentTime / audio.duration) * 1000;
-	}
+	timeInput.value = (audio.currentTime / audio.duration) * 1000 || 0;
 	currentTimeInfo.innerText = convertSecondsToMinutes(audio.currentTime);
-	if (!audio.ended) {
-		isPaused = audio.paused;
-	}
 });
 
+//when audio is ready writes total time info
 audio.oncanplay = () => {
 	totalTimeInfo.innerText = convertSecondsToMinutes(audio.duration);
 };
+
+//when song is ended switches to next song
 audio.onended = () => {
-	forwardButton.click();
-	if (nextId === 0 && !isRepeat) {
-		playButton.click();
-	}
-};
-
-const convertSecondsToMinutes = (num) => {
-	const minutes = Math.floor(num / 60);
-	const seconds = Math.floor(num % 60);
-	if (seconds < 10) {
-		return `${minutes}:0${seconds}`;
-	}
-	return `${minutes}:${seconds}`;
-};
-
-const changeTrack =  (id) => {
-	currentFile = playlist[id];
-	audio.setAttribute("src", `./assets/musics/${currentFile.music}`);
-	poster.setAttribute("src", `./assets/images/${currentFile.image}`);
-	songInfo.innerHTML = `<h1>${currentFile.title}</h1><h3>${currentFile.artist}</h3>`;
-	licenceText.innerHTML = currentFile.desc;
-	if (isPaused) {
-		 audio.pause();
+	calculateNextId();
+	// if its not on repeat or shuffle, player stops at the beginning of playlist.
+	if (nextId === 0 && !isRepeat && !isShuffle) {
+		isPaused = true;
+		playButton.innerHTML = `<i class="fa-solid fa-play"></i>`;
 	} else {
-		 audio.play();
+		isPaused = false;
+		playButton.innerHTML = `<i class="fa-solid fa-pause"></i>`;
 	}
+	changeTrack(nextId);
 };
-
-const calculateNextId = () => {
-	if (isShuffle) {
-		while (true) {
-			nextId = Math.floor(Math.random() * playlist.length);
-			if (nextId !== currentFile.id) {
-				break;
-			}
-		}
-	} else {
-		if (currentFile.id === playlist.length - 1) {
-			nextId = 0;
-		} else {
-			nextId = currentFile.id + 1;
-		}
-	}
-};
-
-const calculatePrevId = () => {
-	if (isShuffle) {
-		while (true) {
-			prevId = Math.floor(Math.random() * playlist.length);
-			if (prevId !== currentFile.id) {
-				break;
-			}
-		}
-	} else {
-		if (currentFile.id === 0) {
-			prevId = playlist.length - 1;
-		} else {
-			prevId = currentFile.id - 1;
-		}
-	}
-};
-
-changeTrack(0);
-
-/* const renderCard = (id) => {
-	playlist.forEach((item) => {
-		if (id === item.id) {
-			currentFile = item;
-		}
-	});
-
-	return `<div class="card">
-  <button class="list-btn"><i class="fa-solid fa-bars"></i></button>
-  <img
-    id="song-poster"
-    src="./assets/images/${currentFile.image}"
-    alt="song-poster"
-  />
-  <div class="info-section">
-    <div class="song-info">
-      <h1>${currentFile.title}</h1>
-      <h3>${currentFile.artist}</h3>
-    </div>
-    <button><i class="fa-solid fa-circle-info"></i></button>
-  </div>
-  <div class="button-container">
-    <button id="shuffle-btn" isShuffle=${isShuffle}><i class="fa-solid fa-shuffle"></i></button>
-    <button id="backward-btn" record=${id - 1}
-      ><i class="fa-solid fa-backward-step"></i
-    ></button>
-    <button id="play-btn"><i class="fa-solid fa-play"></i></button>
-    <button id="forward-btn" record=${id + 1}
-      ><i class="fa-solid fa-forward-step"></i
-    ></button>
-    <button id="repeat-btn" isRepeat=${isRepeat}
-      ><i class="fa-solid fa-arrows-rotate"></i
-    ></button>
-  </div>
-  <input id="time-range" type="range" min="0" max="100" />
-  <div class="time-info">
-    <span id="current-time-info">0:00</span
-    ><span id="total-time-info">0:00</span>
-  </div>
-</div>
-<audio id="current-audio" src="./assets/musics/downtown.mp3" controls>
-</audio>`;
-}; */

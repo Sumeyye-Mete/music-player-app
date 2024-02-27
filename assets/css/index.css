@@ -1,3 +1,4 @@
+/* VARIABLES */
 :root {
 	--font1: calc(1rem + 0.3vw);
 	--font2: calc(1.1rem + 0.4vw);
@@ -7,19 +8,32 @@
 
 	--bg: #81689d;
 	--bgCard: rgba(255, 255, 255, 0.5);
-	--bgLicence: #c0b3ce;
+	--bgLicense: #c0b3ce;
 	--textColor: black;
 
 	--transition: all 0.4s;
 }
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+/* BASE STYLES  */
 
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 }
+
 body {
 	color: var(--textColor);
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 h1,
 h3 {
@@ -28,7 +42,6 @@ h3 {
 .green-text {
 	color: green;
 }
-
 a {
 	text-decoration: none;
 	color: var(--textColor);
@@ -36,18 +49,37 @@ a {
 a:hover {
 	text-decoration: underline;
 }
+/* for licence text part */
+.d-none {
+	display: none;
+}
+/* for playlist section */
+.open {
+	display: flex;
+	flex-direction: column;
+	animation: fadeIn 0.5s;
+}
+.close {
+	display: none;
+}
+/* for playlist list selected item */
+.selected {
+	background-color: var(--bg);
+}
+
+/* CARD STYLES */
 
 .card-container {
-	height: 100vh;
-	width: 100vw;
+	min-height: 100vh;
+	min-width: 100vw;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	background-color: var(--bg);
 }
-
 .card {
-	border: 2px solid black;
+	position: relative;
+	border: 2px solid var(--textColor);
 	border-radius: calc(1rem + 10px);
 	width: 100%;
 	max-width: 400px;
@@ -58,6 +90,7 @@ a:hover {
 	background-color: var(--bgCard);
 }
 
+/* image */
 img#song-poster {
 	aspect-ratio: 5/3;
 	border-radius: 1rem;
@@ -65,21 +98,23 @@ img#song-poster {
 	object-position: 50% 100%;
 }
 
+/* song-artist name */
 div.info-section {
 	position: relative;
 	display: flex;
 	justify-content: space-between;
 }
-
 div.info-section #song-info > * {
 	text-transform: capitalize;
 	margin-bottom: 0.5rem;
+	text-wrap: nowrap;
 }
 
-div.info-section .licence {
+/* licence info  */
+div.info-section .license {
 	position: absolute;
 	max-width: 60%;
-	background-color: var(--bgLicence);
+	background-color: var(--bgLicense);
 	box-shadow: 0 0 5px black;
 	bottom: 3rem;
 	right: 1rem;
@@ -88,52 +123,111 @@ div.info-section .licence {
 	overflow: scroll;
 	text-wrap: nowrap;
 }
-div.info-section .licence::-webkit-scrollbar {
+div.info-section .license::-webkit-scrollbar {
 	width: 0;
 	height: 0;
 }
 
-.d-none {
-	display: none;
-}
-
+/* Navigation Buttons styles  */
 button {
 	background-color: transparent;
 	border: none;
 	cursor: pointer;
 	font-size: var(--font3);
 	transition: var(--transition);
+	color: var(--textColor);
 }
 button:hover {
 	transform: scale(1.1);
 }
-
-.list-btn {
-	align-self: flex-end;
-	margin: 10px;
-	font-size: var(--font3);
-}
-
-input#time-range {
-	width: 100%;
-	padding: 1rem 0;
-}
-
-.time-info {
-	display: flex;
-	justify-content: space-between;
-}
-
-audio#current-audio {
-	display: none;
-}
-
-/* Navigation Buttons styles  */
-
 .button-container {
 	display: flex;
 	justify-content: space-between;
 }
 .button-container #play-btn {
 	font-size: 3rem;
+	width: 3rem;
+}
+#list-btn {
+	align-self: flex-end;
+	margin: 10px;
+	font-size: var(--font3);
+}
+
+/* input */
+input#time-range {
+	width: 100%;
+	padding: 1rem 0;
+}
+
+/* minutes */
+.time-info {
+	display: flex;
+	justify-content: space-between;
+}
+
+/* PLAYLIST */
+
+nav#playlist-container {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	overflow: hidden;
+	padding: 1rem 0;
+	background-color: var(--bgLicense);
+	border-radius: calc(1rem + 10px);
+	transition: all 0.3s;
+}
+
+/* close button */
+nav#playlist-container button {
+	align-self: flex-end;
+	margin-right: 1rem;
+	font-size: 2rem;
+}
+
+/* list */
+ul#playlist {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	list-style-type: none;
+	padding: 2rem 1rem;
+	overflow: scroll;
+	text-transform: capitalize;
+	background-color: var(--bgLicense);
+}
+li.list-item {
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: 2rem;
+	border-radius: 1rem;
+	border: 1px solid var(--textColor);
+}
+li.list-item:hover {
+	background-color: var(--bg);
+}
+li.list-item img {
+	width: 30%;
+	border-radius: 1rem 0 0 1rem;
+	-webkit-aspect-ratio: 5/3;
+	aspect-ratio: 5/3;
+	object-fit: cover;
+	object-position: 50% 100%;
+}
+li.list-item div > * {
+	margin-bottom: 0.5rem;
+}
+
+/* DARK MODE */
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg: #1e2236;
+		--bgCard: #2c2f45;
+		--bgLicense: #484d67;
+		--textColor: white;
+	}
 }

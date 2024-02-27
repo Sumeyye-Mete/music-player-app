@@ -76,8 +76,9 @@ input[type="range"]:hover::-moz-range-thumb {
 	width: 1.5rem;
 }
 
-/* @media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) {
 	:root {
 		--input-thumb-color: white;
+		--input-track-color: rgba(255, 255, 255, 0.5);
 	}
-} */
+}
