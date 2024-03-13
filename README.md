@@ -1,4 +1,4 @@
-# Dream App
+# Music Player App
 
 Welcome to my web page project, where I've used HTML, CSS and vanilla JS to create a music player.
 
